@@ -17,6 +17,7 @@ app.add_middleware(
         "http://localhost:5173",
         "http://localhost:3000",
         "https://mediai-production-56a4.up.railway.app",
+        "https://compassionate-essence-production-4fee.up.railway.app",
         "https://*.railway.app",
     ],
     allow_credentials=True,
