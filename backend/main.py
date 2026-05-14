@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import os
 from database import engine, Base
 from auth import router as auth_router
 from rag import router as rag_router
@@ -11,15 +12,18 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Medical AI Platform", version="1.0.0")
 
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "").split(",")
+ALLOWED_ORIGINS = [o.strip() for o in ALLOWED_ORIGINS if o.strip()]
+
+# Always allow localhost for local development
+DEFAULT_ORIGINS = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://localhost:3000",
-        "https://mediai-production-56a4.up.railway.app",
-        "https://compassionate-essence-production-4fee.up.railway.app",
-        "https://*.railway.app",
-    ],
+    allow_origins=DEFAULT_ORIGINS + ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
